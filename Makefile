@@ -1,7 +1,7 @@
 test:
-	mkdir -p zsh
-	cp -r "$(shell brew --prefix zsh)/bin/"* zsh/
-	zsh/zsh --version
+	mkdir -p test
+	cp -r "$(shell brew --prefix make)/bin/"* test/
+	test/gmake --version
 
 clean:
-	rm -rf zsh
+	rm -rf test
