@@ -13,6 +13,4 @@ jobs:
 
       - name: Prepare
         run: |
-          brew install make
-          gmake --version
-          gmake test
+          make
