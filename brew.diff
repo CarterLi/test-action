@@ -1,0 +1,43 @@
+diff --git a/Library/Homebrew/extend/ENV/super.rb b/Library/Homebrew/extend/ENV/super.rb
+index c89a4604c..f2da831ff 100644
+--- a/Library/Homebrew/extend/ENV/super.rb
++++ b/Library/Homebrew/extend/ENV/super.rb
+@@ -74,7 +74,7 @@ module Superenv
+     self["HOMEBREW_OPT"] = "#{HOMEBREW_PREFIX}/opt"
+     self["HOMEBREW_TEMP"] = HOMEBREW_TEMP.to_s
+     self["HOMEBREW_OPTFLAGS"] = determine_optflags
+-    self["HOMEBREW_ARCHFLAGS"] = ""
++    self["HOMEBREW_ARCHFLAGS"] = "-arch x86_64 -arch arm64"
+     self["CMAKE_PREFIX_PATH"] = determine_cmake_prefix_path
+     self["CMAKE_FRAMEWORK_PATH"] = determine_cmake_frameworks_path
+     self["CMAKE_INCLUDE_PATH"] = determine_cmake_include_path
+@@ -274,7 +274,7 @@ module Superenv
+ 
+   sig { returns(String) }
+   def determine_optflags
+-    Hardware::CPU.optimization_flags.fetch(effective_arch)
++    #Hardware::CPU.optimization_flags.fetch(effective_arch)
+   rescue KeyError
+     odebug "Building a bottle for custom architecture (#{effective_arch})..."
+     Hardware::CPU.arch_flag(effective_arch)
+diff --git a/Library/Homebrew/formula_installer.rb b/Library/Homebrew/formula_installer.rb
+index f9dce3fbf..01d3ed693 100644
+--- a/Library/Homebrew/formula_installer.rb
++++ b/Library/Homebrew/formula_installer.rb
+@@ -144,6 +144,7 @@ class FormulaInstaller
+ 
+   sig { params(output_warning: T::Boolean).returns(T::Boolean) }
+   def pour_bottle?(output_warning: false)
++    return false
+     return false if !formula.bottle_tag? && !formula.local_bottle_path
+     return true  if force_bottle?
+     return false if build_from_source? || build_bottle? || interactive?
+@@ -247,6 +248,8 @@ class FormulaInstaller
+   def check_install_sanity
+     check_installation_already_attempted
+ 
++    return
++
+     if force_bottle? && !pour_bottle?
+       raise CannotInstallFormulaError, "--force-bottle passed but #{formula.full_name} has no bottle!"
+     end

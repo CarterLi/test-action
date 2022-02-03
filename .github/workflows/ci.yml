@@ -13,4 +13,6 @@ jobs:
 
       - name: Prepare
         run: |
-          make
+          git -C $(brew --prefix)/Homebrew apply $(realpath brew.diff)
+          brew reinstall $(brew deps zsh) zsh
+          file $(brew --prefix zsh)/bin/zsh
